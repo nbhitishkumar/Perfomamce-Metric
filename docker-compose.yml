@@ -1,0 +1,30 @@
+version: "3"
+
+services: 
+    influxdb:
+        image: influxdb:alpine
+        container_name: influxdb
+        ports:
+          - "8083:8083"
+          - "8086:8086"
+          - "8090:8090"
+        volumes:
+          - ./data/influxdb:/var/lib/influxdb
+          
+    grafana:
+        image: grafana/grafana:latest
+        container_name: grafana
+        ports:
+          - "3000:3000"
+        user: "0"
+        links:
+          - influxdb
+        volumes:
+          - /srv/docker/grafana/data:/var/lib/grafana
+
+    mqtt:
+        image: emqx/emqx:latest
+        container_name: mqtt
+        ports: 
+          - "18083:18083"
+          - "1883:1883"
